@@ -1,0 +1,110 @@
+---
+title: "Practice SQL"
+author: "Gloria Baidoo"
+date: "2024-10-12"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+#install.packages("duckdb")
+#install.packages("DBI")
+#install.packages("nycflights13")
+```
+
+```{r pressure, echo=FALSE}
+library(duckdb)
+library(DBI)
+library(tidyverse)
+library(nycflights13)
+```
+
+```{r}
+con <- dbConnect(duckdb(dbdir = "../data/flights.duckdb", read_only = TRUE))
+```
+
+```{sql connection=con}
+SHOW TABLES;
+```
+
+```{sql connection=con}
+DESCRIBE;
+```
+
+# Practice 1: Practice 1: Select Flights from a Specific Carrier 
+
+```{sql connection=con}
+SELECT *
+FROM flights
+WHERE carrier = 'UA';
+```
+
+# Practice 2: Count the Number of Flights for Each Carrier
+```{sql connection=con}
+SELECT carrier, COUNT(*) AS flight_count
+FROM flights
+GROUP BY carrier;
+```
+
+# Practice 3: Find the Flights with the Longest Distance
+```{sql connection=con}
+SELECT *
+FROM flights
+ORDER BY distance DESC
+LIMIT 10;
+```
+
+# Practice 4: Calculate Average Arrival Delay for Each Carrier
+```{sql connection=con}
+SELECT carrier, AVG(arr_delay) AS avg_arrival_delay
+FROM flights
+WHERE arr_delay IS NOT NULL
+GROUP BY carrier;
+```
+
+# Practice 5: Find Flights Departing from JFK to LAX
+```{sql connection=con}
+SELECT *
+FROM flights
+WHERE origin = 'JFK' AND dest = 'LAX';
+```
+
+# Practice 6: Calculate the Total Number of Flights Each Month
+```{sql connection=con}
+SELECT month, COUNT(*) AS total_flights
+FROM flights
+GROUP BY month
+ORDER BY month;
+```
+
+# Practice 7: Find Flights with Departure Delays Greater than 2 Hours
+```{sql connection=con}
+SELECT *
+FROM flights
+WHERE dep_delay > 120;
+
+```
+
+# Practice 8: Find the Number of Flights per Day
+```{sql connection=con}
+SELECT year, month, day, COUNT(*) AS total_flights
+FROM flights
+GROUP BY year, month, day
+ORDER BY year, month, day;
+```
+
+# Practice 9: Find Flights That Arrived Early
+```{sql connection=con}
+SELECT *
+FROM flights
+WHERE arr_delay < 0;
+```
+
+# Practice 10: Find the Average Air Time per Carrier
+```{sql connection=con}
+SELECT carrier, AVG(air_time) AS avg_air_time
+FROM flights
+WHERE air_time IS NOT NULL
+GROUP BY carrier;
+```
+
